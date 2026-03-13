@@ -12,6 +12,13 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      # Forces the server to use Java 17 for Android compatibility
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -20,12 +27,14 @@ jobs:
       - name: Install Flet
         run: pip install flet
 
+      # The --verbose flag forces it to show us all the background logs
       - name: Build APK
-        run: flet build apk
+        run: flet build apk --verbose
 
+      # Grabs the compiled app no matter what subfolder it saves to
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: TrixxDownloader-APK
-          path: build/apk/*.apk
+          path: build/**/*.apk
           
